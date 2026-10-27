@@ -15560,10 +15560,13 @@ class BaseSchedulerSolver(
                     hard_stop_msg = "MAA任务未完成，等待3分钟"
                     logger.info(hard_stop_msg)
                     send_message(hard_stop_msg)
-                    self.sleep(180)
                     self.device.exit()
-                    if self.device.check_current_focus():
-                        self.recog.update()
+                    self.sleep(5)
+                    self.device.check_current_focus()
+                    self.recog.update()
+                    # 游戏重启后先完成登录并回到主页，再交给空闲逻辑切后台；
+                    self.login()
+                    self.back_to_index()
                 elif record_execution:
                     logger.info("记录MAA 本次执行时间")
                     self.last_execution["maa"] = datetime.now()
